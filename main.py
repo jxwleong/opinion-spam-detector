@@ -19,11 +19,13 @@ from lib.sklearn.metrics import accuracy_score, precision_score, recall_score, f
 df = pd.read_csv(DATASET_PATH)
 print(df)
 # Separate input data from labels
-X = df["review_text"]
-y = df["is_fake_review"]
-
+#x = df["OR"]
+#y = df["CG"]
+x = df["text_"]
+y = df["label"]
+print(y)
 # Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
 # Preprocess input data using TF-IDF vectorization
 vectorizer = TfidfVectorizer(stop_words="english")
@@ -37,9 +39,9 @@ model.fit(X_train_vect, y_train)
 # Evaluate model performance on testing data
 y_pred = model.predict(X_test_vect)
 accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='micro')
+recall = recall_score(y_test, y_pred, average='micro')
+f1 = f1_score(y_test, y_pred, average='micro')
 
 print("Accuracy:", accuracy)
 print("Precision:", precision)
@@ -47,7 +49,7 @@ print("Recall:", recall)
 print("F1 score:", f1)
 
 # Use model to predict new reviews
-new_review = "This product is amazing!"
+new_review = "This product really helps to make the cooking easier!"
 new_review_vect = vectorizer.transform([new_review])
 new_review_pred = model.predict(new_review_vect)
 print("Prediction for new review:", new_review_pred[0])
