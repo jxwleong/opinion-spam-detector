@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Flask App</title>
+  </head>
+  <body>
+    <h1>Welcome to My Flask App</h1>
+    <form action="{{ url_for('process_text') }}" method="POST">
+      <label for="text">Enter some text:</label>
+      <br>
+      <textarea id="text" name="text" rows="4" cols="50"></textarea>
+      <br>
+      <button type="submit">Submit</button>
+    </form>
+    {% if response %}
+    <div class="response">
+      <p>{{ response }}</p>
+    </div>
+    {% endif %}
+  </body>
+</html>
