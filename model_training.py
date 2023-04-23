@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     # https://machinelearningmastery.com/save-load-machine-learning-models-python-scikit-learn/
     # Save the model to use later.
-    filename = 'finalized_model.bin'
+    filename = filename = os.path.join(os.path.dirname(__file__), 'finalized_model.bin')
     with open(filename, 'wb') as f:
         pickle.dump(my_model, f)
  

@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request
 import pickle
 import json
+import os 
+
 # Need to import the pickled object
 # else when load will have this problem
 # AttributeError: Can't get attribute 'OpinionSpamDetectorModel' on <module '__main__' from '.\\main.py'>
 from model_training import OpinionSpamDetectorModel
 # load the model from disk
-filename = 'finalized_model.bin'
+filename = os.path.join(os.path.dirname(__file__), 'finalized_model.bin')
 with open(filename, 'rb') as f:
     loaded_model = pickle.load(f)
 
