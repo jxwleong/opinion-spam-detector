@@ -11,10 +11,10 @@ sys.path.insert(0, LIB_PATH)
 
 # Import modules from lib folder
 import pandas as pd
-from lib.sklearn.model_selection import train_test_split
-from lib.sklearn.feature_extraction.text import TfidfVectorizer
-from lib.sklearn.linear_model import LogisticRegression
-from lib.sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 class OpinionSpamDetectorModel:
     def __init__(self, dataset_path=DATASET_PATH):
