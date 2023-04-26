@@ -8,9 +8,9 @@ import os
 # AttributeError: Can't get attribute 'OpinionSpamDetectorModel' on <module '__main__' from '.\\main.py'>
 from model_training import OpinionSpamDetectorModel
 # load the model from disk
-filename = os.path.join(os.path.dirname(__file__), 'finalized_model.bin')
+filename = os.path.join(os.path.dirname(__file__), "model", "final_trained_SVM_model.bin")
 with open(filename, 'rb') as f:
-    loaded_model = pickle.load(f)
+    model, vectorizer  = pickle.load(f)
 
 
 
@@ -36,8 +36,8 @@ def process_text():
     # Do something with the text here
 
     new_review = text
-    new_review_vect = loaded_model.vectorizer.transform([new_review])
-    new_review_pred = loaded_model.model.predict(new_review_vect)
+    new_review_vect = vectorizer.transform([new_review])
+    new_review_pred = model.predict(new_review_vect)
     print("Prediction for new review:", new_review_pred[0])
     response_data = {
         "review": text,
