@@ -2,21 +2,51 @@
 <html>
   <head>
     <title>Opinion Spam Detector</title>
+    <link rel="icon" href="/static/spam.jpg" type="image/x-icon">
   </head>
   <body>
     <h1>Opinion Spam Detector</h1>
-    <form action="{{ url_for('process_text') }}" method="POST">
+    <form action="{{ url_for('predict') }}" method="POST">
       <label for="text">Enter opinion:</label>
       <br>
       <textarea id="text" name="text" rows="4" cols="50"></textarea>
       <br>
       <button type="submit">Submit</button>
     </form>
+    <br>
+    <div class="model">
+      <br>
+      <h2>Selected Model:</h2>
+      <p>{{ model_name }}</p>
+    </div>
+    <form action="{{ url_for('change_model') }}" method="POST">
+        <label for="model">Change model:</label>
+        <select id="model" name="model_name">
+          {% for model in model_path.keys() %}
+            {% if model == model_name %}
+              <option value="{{ model }}" selected>{{ model }}</option>
+            {% else %}
+              <option value="{{ model }}">{{ model }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        <button type="submit">Change Model</button>
+      </form>
+      <div class="Other">
+        <br>
+        <h2>Other feature:</h2>
+      </div>
+      <form action="{{ url_for('print_logs') }}" method="POST">
+        <button type="submit">Print Logs</button>
+      </form>
+      <form action="{{ url_for('get_model_metrics') }}" method="POST">
+        <button type="submit">Get Model Metrics</button>
+      </form>
     {% if response %}
     <div class="response">
       <br>
       <h2>Response:</h2>
-      <p>{{ response }}</p>
+      <pre>{{ response|json_format }}</pre>
     </div>
     {% endif %}
   </body>

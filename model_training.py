@@ -4,6 +4,7 @@ import os
 import sys 
 import pickle
 import logging 
+import json
 
 REPO_ROOT= os.path.normpath(os.path.join(os.path.abspath(__file__), ".."))
 LIB_PATH = os.path.join(REPO_ROOT, "lib")
@@ -44,7 +45,8 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-
+model_metrics = {}
+model_bin_name_prefix = "final_trained_model_"
 class OpinionSpamDetectorModel:
     def __init__(self, dataset_path=DATASET_PATH):
         self.dataset_path = dataset_path
@@ -162,11 +164,21 @@ if __name__ == "__main__":
         logger.info(f"F1 score: {f1}")
         logger.info("-------------------------------------------------------")
 
+        model_metrics[name] = {}
+        model_metrics[name]["Accuracy"] = accuracy
+        model_metrics[name]["Precision"] = precision
+        model_metrics[name]["Recall"] = recall
+        model_metrics[name]["F1 score"] = f1
+
         model_underscore_name = name.replace(" ", " ")
-        model_bin = os.path.join(os.path.dirname(__file__), "model", f"final_trained_{model_underscore_name}_model.bin")
+        model_bin = os.path.join(os.path.dirname(__file__), "model", f"{model_bin_name_prefix}{model_underscore_name}.bin")
         if os.path.exists(model_bin) is False:
             with open(model_bin, 'wb') as f:
                 pickle.dump((model, vectorizer), f)
+        
+        model_metrics_file = os.path.join(os.path.dirname(__file__), "model", f"model_metrics.json")
+        with open(model_metrics_file, "w") as f:
+            json.dump(model_metrics, f, indent=4)
 
     """
     
