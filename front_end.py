@@ -13,10 +13,10 @@ mapping = {
 
 model_path = {
     "SVM": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_SVM.bin'),
-    "Logistic Regression": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_Logistic Regression.bin'),
+    "Logistic Regression": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_Logistic_Regression.bin'),
     "KNN": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_KNN.bin'),
-    "Decision Tree": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_Decision Tree.bin'),
-    "Random Forest": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_Random Forest.bin'),
+    "Decision Tree": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_Decision_Tree.bin'),
+    "Random Forest": os.path.join(os.path.dirname(__file__), "model", 'final_trained_model_Random_Forest.bin'),
 }
 
 # Setup default model

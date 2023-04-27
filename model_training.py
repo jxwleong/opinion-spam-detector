@@ -8,7 +8,7 @@ import json
 
 REPO_ROOT= os.path.normpath(os.path.join(os.path.abspath(__file__), ".."))
 LIB_PATH = os.path.join(REPO_ROOT, "lib")
-DATASET_PATH = os.path.join(REPO_ROOT, "dataset", "fake reviews dataset.csv")
+DATASET_PATH = os.path.join(REPO_ROOT, "dataset", "fake_reviews_dataset.csv")
 sys.path.insert(0, LIB_PATH)
 
 # Import modules from lib folder
@@ -170,7 +170,7 @@ if __name__ == "__main__":
         model_metrics[name]["Recall"] = recall
         model_metrics[name]["F1 score"] = f1
 
-        model_underscore_name = name.replace(" ", " ")
+        model_underscore_name = name.replace(" ", "_")
         model_bin = os.path.join(os.path.dirname(__file__), "model", f"{model_bin_name_prefix}{model_underscore_name}.bin")
         if os.path.exists(model_bin) is False:
             with open(model_bin, 'wb') as f:
