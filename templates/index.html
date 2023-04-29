@@ -49,5 +49,17 @@
       <pre>{{ response|json_format }}</pre>
     </div>
     {% endif %}
+    <br>
+    <h2>Feedback Form</h2>
+    <form action="{{ url_for('feedback') }}" method="POST">
+      <label for="feedback">Enter feedback:</label>
+      <br>
+      <textarea id="feedback" name="feedback" rows="4" cols="50"></textarea>
+      <br>
+      <button type="submit">Submit Feedback</button>
+    </form>
+    {% if feedback_submitted %}
+    <p style="color: green;">Thank you for your feedback!</p>
+    {% endif %}
   </body>
 </html>

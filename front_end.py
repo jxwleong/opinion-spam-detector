@@ -2,7 +2,20 @@ from flask import Flask, render_template, request, jsonify
 import pickle
 import json
 import os 
+import logging
+from logging.handlers import RotatingFileHandler
+import csv
+import datetime
 
+handler = RotatingFileHandler('main.log', maxBytes=1024 * 1024 * 100, backupCount=20)
+handler.setLevel(logging.DEBUG)
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+logging.getLogger().addHandler(handler)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+stream_handler.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+logging.getLogger().addHandler(stream_handler)
 
 
 mapping = {
@@ -47,12 +60,14 @@ def change_model():
     global model 
     global vectorizer
     
+    original_model = current_model_name
     model_name = request.form["model_name"]
     current_model_name = model_name
     if model_name in model_path:
         current_model_path = model_path[model_name]
         with open(current_model_path, "rb") as f:
             model, vectorizer  = pickle.load(f)
+        app.logger.info(f"Changed model from '{original_model}' to '{model_name}'")
         return render_template("index.html", model_name=model_name, model_path=model_path)
     else:
         return jsonify({"message": f"Model {model_name} not found"}), 400
@@ -81,7 +96,7 @@ def predict():
     }
 
     response = json.dumps(response_data, indent=4)
-
+    app.logger.info(response)
     if request.method == "POST":
         return render_template("index.html", response=response, model_name=current_model_name, model=model, model_path=model_path)
     else:
@@ -109,10 +124,34 @@ def get_model_metrics():
         metrics = json.load(f)
         formatted_metrics = json.dumps(metrics, indent=4)
         
+    app.logger.info(formatted_metrics)
+
     if request.method == "GET":
         return formatted_metrics
     else:
         return render_template("index.html", response=formatted_metrics, model_name=current_model_name, model=model, model_path=model_path)
+
+
+CSV_HEADER = ['Timestamp', 'Feedback']
+
+# Create a function to write feedback to a CSV file
+def write_feedback_to_csv(feedback):
+    file_exists = os.path.isfile('feedback.csv')
+    with open('feedback.csv', mode='a', newline='') as feedback_file:
+        feedback_writer = csv.writer(feedback_file)
+        if not file_exists:
+            feedback_writer.writerow(CSV_HEADER)
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        feedback_writer.writerow([timestamp, feedback])
+
+@app.route("/api/feedback", methods=["POST"])
+def feedback():
+    feedback = request.form["feedback"]
+    app.logger.info(f"New feedback received: {feedback}")
+    write_feedback_to_csv(feedback)
+    return render_template("index.html", feedback_submitted=True, model_name=current_model_name, model_path=model_path)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
