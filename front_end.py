@@ -53,7 +53,7 @@ def index():
     return render_template("index.html", model_name=current_model_name,  model_path=model_path)
 
     
-@app.route("/api/change_model", methods=["POST"])
+@app.route("/api/change_model", methods=["GET", "POST"])
 def change_model():
     global current_model
     global current_model_name
@@ -61,16 +61,27 @@ def change_model():
     global vectorizer
     
     original_model = current_model_name
-    model_name = request.form["model_name"]
+    
+    if request.method == "POST":
+        model_name = request.form["model_name"]
+    else:
+        model_name = request.args.get("model_name")
+        
     current_model_name = model_name
+    
     if model_name in model_path:
         current_model_path = model_path[model_name]
         with open(current_model_path, "rb") as f:
             model, vectorizer  = pickle.load(f)
         app.logger.info(f"Changed model from '{original_model}' to '{model_name}'")
-        return render_template("index.html", model_name=model_name, model_path=model_path)
+        
+        if request.method == "POST":
+            return render_template("index.html", model_name=model_name, model_path=model_path)
+        else:
+            return jsonify({"model_name": model_name, "model_path": current_model_path})
     else:
         return jsonify({"message": f"Model {model_name} not found"}), 400
+
     
 
 
