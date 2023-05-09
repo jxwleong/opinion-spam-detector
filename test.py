@@ -4,4 +4,4 @@ import sys
 from model_training import OpinionSpamDetectorModel
 
 # import flask app but need to call it "application" for WSGI to work
-from front_end import app as application  # noqa
+from back_end import app as application  # noqa
